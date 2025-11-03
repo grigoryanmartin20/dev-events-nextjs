@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import { cacheLife } from "next/cache";
 // Database
 import { IEvent } from "@/database";
 // Actions
@@ -38,6 +39,10 @@ const EventTags = ({ tags }: { tags: Array<string> }) => (
 );
 
 const EventDetailPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
+	'use cache';
+
+	cacheLife('hours');
+
 	const { slug } = await params;
 
 	let event: IEvent | null = null;
@@ -111,7 +116,7 @@ const EventDetailPage = async ({ params }: { params: Promise<{ slug: string }> }
 							<p className="text-sm">Be the first to book your spot!</p>
 						)}
 						{/* Booking Form Component */}
-						<BookEvent />
+						<BookEvent eventId={event?._id as string} slug={event?.slug as string} />
 						{/* Booking Form Component End */}
 					</div>
 				</aside>
